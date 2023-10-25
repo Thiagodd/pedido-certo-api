@@ -16,7 +16,7 @@ jobs:
                     distribution: 'temurin'
                     java-version: '17'
             -   name: Build Project
-                run: PROFILE_ACTIVE=prod mvn clean install -DskipTests
+                run: mvn clean install -DskipTests -DPROFILE_ACTIVE=prod
             -   name: Login Docker Hub
                 run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
             -   name: Build Docker Image
