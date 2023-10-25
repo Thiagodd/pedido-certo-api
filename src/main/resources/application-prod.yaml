@@ -1,6 +1,4 @@
 spring:
-    profiles:
-        active: test
     datasource:
         url: ${DATABASE_URL:-jdbc:postgresql://localhost/pedidocerto}
         username: ${DATABASE_USERNAME}
