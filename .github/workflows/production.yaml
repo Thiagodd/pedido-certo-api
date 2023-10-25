@@ -3,7 +3,6 @@ on:
     pull_request:
         branches:
             - main
-            - develop
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -25,7 +24,9 @@ jobs:
                 run: docker push thiagodd/pedidocerto-api
     deploy:
         needs: build
-        runs-on: self-hosted
+        runs-on:
+            labels:
+                - prod-instance
         steps:
             - name: Pull image from docker hub
               run: docker pull thiagodd/pedidocerto-api:latest
