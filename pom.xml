@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.thiagodd</groupId>
 	<artifactId>pedidocerto-api</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>pedidocerto-api</name>
 	<description>API RESTful para o sistema Pedido Certo</description>
 	<properties>
