@@ -3,7 +3,6 @@ package com.thiagodd.pedidocertoapi.domain.model;
 import com.thiagodd.pedidocertoapi.domain.model.enumerated.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.math.BigDecimal;
 import java.time.Instant;
