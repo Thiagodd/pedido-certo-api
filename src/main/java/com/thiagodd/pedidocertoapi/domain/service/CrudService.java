@@ -20,5 +20,4 @@ public interface CrudService<T, D> {
 
     void delete(UUID id);
 
-    T findEntityById(UUID id);
 }

@@ -1,7 +1,10 @@
 package com.thiagodd.pedidocertoapi.domain.mapper;
 
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 
+@Component
 public interface GenericMapper<T, D> {
     D toDto(T entity);
 
@@ -9,5 +12,5 @@ public interface GenericMapper<T, D> {
 
     T toEntity(D dto);
 
-    void partialUpdate(D dto, T entity);
+    T partialUpdate(D dto, T entity);
 }

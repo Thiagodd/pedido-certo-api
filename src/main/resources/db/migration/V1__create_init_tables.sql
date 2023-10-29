@@ -5,7 +5,7 @@ CREATE TABLE cuisine
     updated_by VARCHAR(50),
     created_at TIMESTAMP WITHOUT TIME ZONE,
     updated_at TIMESTAMP WITHOUT TIME ZONE,
-    name       VARCHAR(50),
+    name       VARCHAR(50) NOT NULL,
     CONSTRAINT pk_cuisine PRIMARY KEY (id)
 );
 
