@@ -2,7 +2,7 @@ name: Deploy Application
 on:
     pull_request:
         branches:
-            - main
+            - develop
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -19,18 +19,18 @@ jobs:
             -   name: Login Docker Hub
                 run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
             -   name: Build Docker Image
-                run: docker build -t thiagodd/pedidocerto-api .
+                run: docker build -t thiagodd/dev_pedidocerto-api .
             -   name: Push Docker Image
-                run: docker push thiagodd/pedidocerto-api
+                run: docker push thiagodd/dev_pedidocerto-api
     deploy:
         needs: build
         runs-on:
             labels:
-                - prod-instance
+                - develop-instance
         steps:
-            - name: Pull image from docker hub
-              run: docker pull thiagodd/pedidocerto-api:latest
-            - name: Remove docker container
-              run: docker rm -f deploy_pedidocerto-api
-            - name: Run docker container
-              run: docker run -d -p 8080:8080 -e DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }} -e DATABASE_PASSWORD='${{ secrets.DATABASE_PASSWORD }}' -e DATABASE_URL=${{ secrets.DATABASE_URL }} -e PROFILE_ACTIVE=${{ secrets.PROFILE_ACTIVE }} --name deploy_pedidocerto-api thiagodd/pedidocerto-api
+            -   name: Pull image from docker hub
+                run: docker pull thiagodd/dev_pedidocerto-api:latest
+            -   name: Remove docker container
+                run: docker rm -f deploy_dev_pedidocerto-api
+            -   name: Run docker container
+                run: docker run -d -p 8080:8080 -e DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }} -e DATABASE_PASSWORD='${{ secrets.DATABASE_PASSWORD }}' -e DATABASE_URL=${{ secrets.DATABASE_URL }} -e PROFILE_ACTIVE=${{ secrets.PROFILE_ACTIVE }} --name deploy_dev_pedidocerto-api thiagodd/dev_pedidocerto-api
