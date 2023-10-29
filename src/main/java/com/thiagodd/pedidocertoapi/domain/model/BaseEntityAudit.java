@@ -12,10 +12,13 @@ import java.time.Instant;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class BaseEntityAudit {
 
+public abstract class BaseEntityAudit extends BaseEntity {
+
+    @Column(name = "created_by", updatable = false)
     private String createdBy;
 
+    @Column(name = "updated_by")
     private String updatedBy;
 
     @CreationTimestamp
@@ -26,3 +29,4 @@ public abstract class BaseEntityAudit {
     @Column(name = "updated_at")
     private Instant updatedAt;
 }
+
