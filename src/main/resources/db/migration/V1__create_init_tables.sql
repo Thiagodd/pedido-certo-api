@@ -77,6 +77,7 @@ CREATE TABLE restaurant
     shipping_rate        DECIMAL,
     active               BOOLEAN,
     open                 BOOLEAN,
+    cuisine_id           UUID         NOT NULL,
     address_cep          VARCHAR(50),
     address_public_place VARCHAR(50),
     address_number       VARCHAR(50),
@@ -103,6 +104,9 @@ ALTER TABLE order_item
 
 ALTER TABLE product
     ADD CONSTRAINT FK_PRODUCT_ON_RESTAURANT FOREIGN KEY (restaurant_id) REFERENCES restaurant (id);
+
+ALTER TABLE restaurant
+    ADD CONSTRAINT FK_RESTAURANT_ON_CUISINE FOREIGN KEY (cuisine_id) REFERENCES cuisine (id);
 
 ALTER TABLE restaurant_payment_method
     ADD CONSTRAINT fk_respaymet_on_payment_method FOREIGN KEY (payment_method_id) REFERENCES payment_method (id);
