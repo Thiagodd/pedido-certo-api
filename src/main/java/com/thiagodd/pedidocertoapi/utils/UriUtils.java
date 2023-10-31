@@ -1,6 +1,5 @@
 package com.thiagodd.pedidocertoapi.utils;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
