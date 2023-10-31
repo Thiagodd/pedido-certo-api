@@ -32,6 +32,10 @@ public class Restaurant extends BaseEntityAudit{
     @OneToMany(mappedBy = "restaurant")
     private List<Product> products;
 
+    @ManyToOne
+    @JoinColumn(name = "cuisine_id", nullable = false)
+    private Cuisine cuisine;
+
     @ManyToMany
     @JoinTable(
         name = "restaurant_payment_method",

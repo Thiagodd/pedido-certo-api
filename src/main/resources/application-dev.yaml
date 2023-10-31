@@ -16,6 +16,8 @@ spring:
             ddl-auto: update
         show-sql: true
         open-in-view: true
+    flyway:
+        locations: classpath:db/migration,classpath:db/datatest
     messages:
         basename: messages
         fallback-to-system-locale: false

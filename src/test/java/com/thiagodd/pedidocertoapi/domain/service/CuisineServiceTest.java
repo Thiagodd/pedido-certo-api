@@ -3,7 +3,6 @@ package com.thiagodd.pedidocertoapi.domain.service;
 import com.thiagodd.pedidocertoapi.domain.mapper.CuisineMapper;
 import com.thiagodd.pedidocertoapi.domain.model.Cuisine;
 import com.thiagodd.pedidocertoapi.domain.model.dto.CuisineDto;
-import com.thiagodd.pedidocertoapi.domain.repository.CuisineRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,8 +21,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class CuisineServiceTest {
 
-    @Autowired
-    private CuisineRepository cuisineRepository;
 
     @Autowired
     private CuisineService cuisineService;
@@ -31,31 +28,31 @@ class CuisineServiceTest {
     @Autowired
     private CuisineMapper mapper;
 
-    private final List<UUID> VALID_ID = new ArrayList<>();
+    private final List<Cuisine> VALID_CUISINES = new ArrayList<>();
+    private Integer TOTAL_CUISINES;
 
 
     @BeforeEach
     public void setUp() {
-        cuisineRepository.deleteAll();
 
-        List<Cuisine> cuisines = new ArrayList<>();
+        Cuisine italian = Cuisine.builder()
+            .id(UUID.fromString("abb6b6f7-e7b2-4507-92f1-e9583b01767b"))
+            .name("Italian")
+            .build();
+        Cuisine mexican = Cuisine.builder()
+            .id(UUID.fromString("745cb43f-9354-4d8b-8040-029dcd333b0e"))
+            .name("Mexican")
+            .build();
+        Cuisine chinese = Cuisine.builder()
+            .id(UUID.fromString("9e18ef29-73a4-4410-8538-059e31827a05"))
+            .name("Chinese")
+            .build();
 
-        Cuisine brazilian = new Cuisine("Brasileira");
-        brazilian.setCreatedBy("Default");
-        Cuisine italian = new Cuisine("Italiana");
-        italian.setCreatedBy("Default");
-        Cuisine japanese = new Cuisine("Japonesa");
-        japanese.setCreatedBy("Default");
+        VALID_CUISINES.add(italian);
+        VALID_CUISINES.add(mexican);
+        VALID_CUISINES.add(chinese);
 
-        cuisines.add(brazilian);
-        cuisines.add(italian);
-        cuisines.add(japanese);
-
-        cuisineRepository.saveAll(cuisines);
-
-        VALID_ID.add(brazilian.getId());
-        VALID_ID.add(italian.getId());
-        VALID_ID.add(japanese.getId());
+        TOTAL_CUISINES = cuisineService.findAll(PageRequest.of(0, 10)).getContent().size();
     }
 
     @Test
@@ -96,22 +93,24 @@ class CuisineServiceTest {
         Page<CuisineDto> cuisines = cuisineService.findAll(PageRequest.of(pageNumber, pageSize));
 
         // Then
+        System.out.println("CUISINE CONTENT SIZE: " + cuisines.getContent().size());
         assertNotNull(cuisines);
-        assertEquals(3, cuisines.getContent().size());
+        assertEquals(TOTAL_CUISINES, cuisines.getContent().size());
     }
 
     @Test
     @DisplayName("Checks if it is possible to find a cuisine by ID.")
     public void shouldBeAbleToFindCuisineByID(){
         // Given
-        var validId = VALID_ID.get(0);
+        var validCuisine = VALID_CUISINES.get(0);
 
         // When
-        var cuisine = cuisineService.findById(validId);
+        var cuisine = cuisineService.findById(validCuisine.getId());
 
         // Then
         assertNotNull(cuisine);
-        assertEquals("Brasileira", cuisine.getName());
+        assertEquals(validCuisine.getId(), cuisine.getId());
+        assertEquals(validCuisine.getName(), cuisine.getName());
     }
 
     @Test
@@ -129,15 +128,15 @@ class CuisineServiceTest {
     @DisplayName("Checks whether it is possible to update a cuisine with valid data.")
     public void shouldBeAbleToUpdateCuisineWithValidData(){
         // Given
-        var validId = VALID_ID.get(0);
-        var cuisineDto = cuisineService.findById(validId);
+        var validCuisine = VALID_CUISINES.get(0);
+        var cuisineDto = cuisineService.findById(validCuisine.getId());
 
+
+        // When
         var cuisine = mapper.toEntity(cuisineDto);
         cuisine.setName("Alemã");
         cuisineDto = mapper.toDto(cuisine);
-
-        // When
-        var updatedCuisine = cuisineService.update(validId, cuisineDto);
+        var updatedCuisine = cuisineService.update(validCuisine.getId(), cuisineDto);
 
         // Then
         assertNotNull(updatedCuisine);
@@ -148,26 +147,26 @@ class CuisineServiceTest {
     @DisplayName("Checks if it is not possible to update a cuisine with invalid data.")
     public void shouldNotBeAbleToUpdateCuisineWithInvalidData(){
         // Given
-        var validId =  VALID_ID.get(0);
-        var cuisine = cuisineService.findById(validId);
+        var validCuisine =  VALID_CUISINES.get(0);
+        var result = cuisineService.findById(validCuisine.getId());
 
         // When
-        cuisine.setName("");
+        result.setName("");
         // Then
-        assertThrows(Exception.class, () -> cuisineService.update(validId, cuisine));
+        assertThrows(Exception.class, () -> cuisineService.update(validCuisine.getId(), result));
     }
 
     @Test
     @DisplayName("Checks whether it is possible to delete a cuisine.")
     public void shouldBeAbleToDeleteCuisine(){
-        UUID id = VALID_ID.get(1);
+        var validCuisine = VALID_CUISINES.get(2);
 
-        cuisineService.delete(id);
+        cuisineService.delete(validCuisine.getId());
 
         Page<CuisineDto> cuisines = cuisineService.findAll(PageRequest.of(0, 10));
 
         // Then
-        assertEquals(2, cuisines.getContent().size());
+        assertEquals(TOTAL_CUISINES - 1, cuisines.getContent().size());
     }
 
     @Test
@@ -179,17 +178,17 @@ class CuisineServiceTest {
         Page<CuisineDto> cuisines = cuisineService.findAll(PageRequest.of(0, 10));
 
         // Then
-        assertEquals(3, cuisines.getContent().size());
+        assertEquals(TOTAL_CUISINES, cuisines.getContent().size());
     }
 
-//    @Test
-//    @DisplayName("Checks whether an exception is thrown if the cuisine is in use.")
-//    public void shouldReturnErrorIfCuisineIsInUse(){
-//        // Given
-//        UUID id = UUID.randomUUID();
-//
-//        // When
-//        // Then
-//        assertThrows(Exception.class, () -> cuisineService.delete(id));
-//    }
+    @Test
+    @DisplayName("Checks whether an exception is thrown if the cuisine is in use.")
+    public void shouldReturnErrorIfCuisineIsInUse(){
+        // Given
+        UUID id = VALID_CUISINES.get(0).getId();
+
+        // When
+        // Then
+        assertThrows(Exception.class, () -> cuisineService.delete(id));
+    }
 }

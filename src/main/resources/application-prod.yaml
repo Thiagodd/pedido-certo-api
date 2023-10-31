@@ -13,6 +13,8 @@ spring:
             ddl-auto: none
         show-sql: true
         open-in-view: true
+    flyway:
+        locations: classpath:db/migration
     messages:
         basename: messages
         fallback-to-system-locale: false
