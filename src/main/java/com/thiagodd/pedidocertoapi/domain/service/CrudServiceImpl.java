@@ -11,15 +11,13 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-@Service
-public class CrudServiceImpl<T extends BaseEntity, D extends BaseDto> implements CrudService<T, D> {
+public abstract class CrudServiceImpl<T extends BaseEntity, D extends BaseDto> implements CrudService<T, D> {
 
-    private final JpaRepository<T, UUID> repository;
-    private final GenericMapper<T, D> mapper;
+    protected final JpaRepository<T, UUID> repository;
+    protected final GenericMapper<T, D> mapper;
 
     public CrudServiceImpl(JpaRepository<T, UUID> repository, GenericMapper<T, D> mapper) {
         this.repository = repository;
