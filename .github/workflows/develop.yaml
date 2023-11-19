@@ -32,16 +32,13 @@ jobs:
         steps:
             -   name: Pull image from docker hub
                 run: docker pull thiagodd/dev_pedidocerto-api:latest
+
             -   name: Remove docker container
                 run: docker rm -f deploy_dev_pedidocerto-api
+
             -   name: Run docker container
                 run: docker run -d -p 8080:8080 -e DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }} -e DATABASE_PASSWORD='${{ secrets.DATABASE_PASSWORD }}' -e DATABASE_URL=${{ secrets.DATABASE_URL }} -e PROFILE_ACTIVE=${{ secrets.PROFILE_ACTIVE }} --name deploy_dev_pedidocerto-api thiagodd/dev_pedidocerto-api
 
-    docker-compose:
-        needs: deploy
-        runs-on: ubuntu-latest
-
-        steps:
             -   name: Checkout repository
                 uses: actions/checkout@v2
 
