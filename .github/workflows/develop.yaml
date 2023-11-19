@@ -38,4 +38,4 @@ jobs:
                 run: |
                     ls ..
                     ls ../../
-                    cd docker/keycloak && ls && docker compose up -d
+                    cd pedidocerto-api/docker/keycloak && ls && docker compose up -d
