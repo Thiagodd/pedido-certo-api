@@ -36,5 +36,25 @@ jobs:
                 run: docker rm -f deploy_dev_pedidocerto-api
             -   name: Run docker container
                 run: docker run -d -p 8080:8080 -e DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }} -e DATABASE_PASSWORD='${{ secrets.DATABASE_PASSWORD }}' -e DATABASE_URL=${{ secrets.DATABASE_URL }} -e PROFILE_ACTIVE=${{ secrets.PROFILE_ACTIVE }} --name deploy_dev_pedidocerto-api thiagodd/dev_pedidocerto-api
-            -   name: List content
-                run: ls -a && pwd && ls -a $(pwd)
+
+    docker-compose:
+        needs: deploy
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Checkout repository
+                uses: actions/checkout@v2
+
+            -   name: Set up Docker Compose
+                run: |
+                    sudo apt-get update
+                    sudo apt-get install -y docker-compose
+
+            -   name: Build and run Docker Compose
+                run: |
+                    docker compose -f docker/keycloak/docker-compose.yml up -d
+
+            -   name: Test if services are up
+                run: |
+                    sleep 30
+                    docker ps
