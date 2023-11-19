@@ -54,8 +54,8 @@ jobs:
                 run: |
                     docker compose -f docker/keycloak/docker-compose.yml up -d
                     docker-compose -f docker/keycloak/docker-compose.yml logs
-
-            -   name: Test if services are up
-                run: |
-                    sleep 30
-                    docker ps
+#
+#            -   name: Test if services are up
+#                run: |
+#                    sleep 30
+#                    docker ps
