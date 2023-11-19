@@ -24,38 +24,37 @@ jobs:
                 run: docker build -t thiagodd/dev_pedidocerto-api .
             -   name: Push Docker Image
                 run: docker push thiagodd/dev_pedidocerto-api
-    deploy:
-        needs: build
-        runs-on:
-            labels:
-                - develop-instance
-        steps:
-            -   name: Pull image from docker hub
-                run: docker pull thiagodd/dev_pedidocerto-api:latest
-
-            -   name: Remove docker container
-                run: docker rm -f deploy_dev_pedidocerto-api
-
-            -   name: Run docker container
-                run: docker run -d -p 8080:8080 -e DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }} -e DATABASE_PASSWORD='${{ secrets.DATABASE_PASSWORD }}' -e DATABASE_URL=${{ secrets.DATABASE_URL }} -e PROFILE_ACTIVE=${{ secrets.PROFILE_ACTIVE }} --name deploy_dev_pedidocerto-api thiagodd/dev_pedidocerto-api
-
             -   name: Checkout repository
                 uses: actions/checkout@v2
-
             -   name: Set up Docker Compose
                 run: |
                     sudo apt-get update
                     sudo apt-get install -y docker-compose
-
             -   name: List files in directory
                 run: ls -R
-
             -   name: Build and run Docker Compose
                 run: |
                     docker compose -f docker/keycloak/docker-compose.yml up -d
-                    docker-compose -f docker/keycloak/docker-compose.yml logs
+                    docker compose -f docker/keycloak/docker-compose.yml logs
+            -   name: Test if services are up
+                run: |
+                    sleep 30
+                    docker ps
+#    deploy:
+#        needs: build
+#        runs-on:
+#            labels:
+#                - develop-instance
+#        steps:
+#            -   name: Pull image from docker hub
+#                run: docker pull thiagodd/dev_pedidocerto-api:latest
+#            -   name: Remove docker container
+#                run: docker rm -f deploy_dev_pedidocerto-api
+#            -   name: Run docker container
+#                run: docker run -d -p 8080:8080 -e DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }} -e DATABASE_PASSWORD='${{ secrets.DATABASE_PASSWORD }}' -e DATABASE_URL=${{ secrets.DATABASE_URL }} -e PROFILE_ACTIVE=${{ secrets.PROFILE_ACTIVE }} --name deploy_dev_pedidocerto-api thiagodd/dev_pedidocerto-api
 #
-#            -   name: Test if services are up
-#                run: |
-#                    sleep 30
-#                    docker ps
+#    docker-compose:
+#        needs: deploy
+#        runs-on: ubuntu-latest
+#
+#        steps:
