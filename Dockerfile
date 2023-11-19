@@ -3,7 +3,7 @@ LABEL authors="thiagodd"
 
 WORKDIR /app
 
-COPY target/pedidocerto-api-0.0.1.jar pedidocerto-api-0.0.1.jar
+COPY . .
 
 EXPOSE 8080
 
