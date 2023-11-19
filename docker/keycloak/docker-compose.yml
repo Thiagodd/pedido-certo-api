@@ -50,7 +50,7 @@ services:
             KC_METRICS_ENABLED: 'true'
             # KC_HOSTNAME: keycloak.com.au
             # KC_HOSTNAME_PORT: 8180
-            KC_HOSTNAME_URL: ${KC_HOSTNAME_URL:-http://keycloak.com.au:8180}
+            KC_HOSTNAME_URL: ${KC_HOSTNAME_URL:-http://54.172.204.101/:8180}
             KC_PROXY: reencrypt
             KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
             KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-password}
