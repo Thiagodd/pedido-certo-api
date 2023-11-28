@@ -9,6 +9,8 @@ jobs:
         steps:
             -   name: Checkout Code
                 uses: actions/checkout@v3
+                with:
+                    clean: false
             -   name: Setup Java
                 uses: actions/setup-java@v3
                 with:
@@ -34,3 +36,24 @@ jobs:
                 run: docker rm -f deploy_dev_pedidocerto-api
             -   name: Run docker container
                 run: docker run -d -p 8080:8080 -e DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }} -e DATABASE_PASSWORD='${{ secrets.DATABASE_PASSWORD }}' -e DATABASE_URL=${{ secrets.DATABASE_URL }} -e PROFILE_ACTIVE=${{ secrets.PROFILE_ACTIVE }} --name deploy_dev_pedidocerto-api thiagodd/dev_pedidocerto-api
+
+    docker-compose:
+        needs: deploy
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Checkout repository
+                uses: actions/checkout@v3
+#            -   name: Set up Docker Compose
+#                run: |
+#                    sudo apt-get update
+#                    sudo apt-get install -y docker-compose
+            -   name: List files in directory
+                run: ls -R
+            -   name: Build and run Docker Compose
+                run: |
+                    docker compose -f docker/keycloak/docker-compose.yml up -d
+            -   name: Test if services are up
+                run: |
+                    sleep 60
+                    docker ps
